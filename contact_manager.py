@@ -24,15 +24,12 @@ def get_contact_page(pageSize, page, query):
 	except NotFoundError: # No contacts have been created yet.
 		return []
 
-def create_contact(newname):
+def create_contact(contact):
 	try:
-		contact = get_contact(newname)
+		contact = get_contact(contact.name)
 	# Want exception to be raised here, means name does not yet exist.
 	except (NotFoundError, InvalidNameException): 
-		body = {
-					'name': newname
-				}
-		return es.index(index=index, doc_type="contact", body=body)
+		return es.index(index=index, doc_type="contact", body=contact.attrs)
 	raise InvalidNameException()
 
 def get_contact(name):
@@ -50,12 +47,12 @@ def get_contact(name):
 		raise InvalidNameException()
 	return res['hits'][0]
 
-def put_contact(name, newname):
+def put_contact(name, newcontact):
 	contact = get_contact(name)
-	body = {
-				'name': newname
-			}
-	return es.index(index=index, doc_type="contact", id=contact['_id'], body=body)
+	for key in contact['_source']:
+		if key not in newcontact.attrs:
+			newcontact.attrs[key] = contact['_source'][key]
+	return es.index(index=index, doc_type="contact", id=contact['_id'], body=newcontact.attrs)
 
 def delete_contact(name):
 	contact = get_contact(name)

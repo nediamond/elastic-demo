@@ -6,6 +6,7 @@ from contact_manager import (get_contact_page,
 							 put_contact, 
 							 delete_contact,
 							 InvalidNameException)
+from contact_model import ContactModel
 
 app = Flask(__name__)
 
@@ -22,8 +23,11 @@ def contact():
 		return json.dumps(get_contact_page(**kwargs))
 	elif request.method == "POST":
 		try:
-			return json.dumps(create_contact(request.values['name']))
-		except (KeyError, InvalidNameException):
+			contact = ContactModel(request.values['name'], 
+								   request.values.get('phone'), 
+								   request.values.get('email'))
+			return json.dumps(create_contact(contact))
+		except (KeyError, InvalidNameException, ValueError):
 			return ('Bad Request', 400)
 
 
@@ -34,9 +38,13 @@ def contact_name(name):
 		if request.method == "GET":
 			return json.dumps(get_contact(name))
 		elif request.method == "PUT":
-			if 'name' not in request.values:
+			try:
+				newcontact = ContactModel(request.values.get('name', name), 
+									   	  request.values.get('phone'), 
+									   	  request.values.get('email'))
+				return json.dumps(put_contact(name, newcontact))	
+			except ValueError:
 				return ('Bad Request', 400)
-			return json.dumps(put_contact(name, request.values['name']))
 		elif request.method == "DELETE":
 			return json.dumps(delete_contact(name))
 	except InvalidNameException:
