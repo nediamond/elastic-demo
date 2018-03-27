@@ -1,4 +1,4 @@
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, NotFoundError
 
 #Todo: config
 es = Elasticsearch(
@@ -19,17 +19,20 @@ def get_contact_page(pageSize, page, query):
 					}
 				}
 			}
-	return es.search(index=index, body=body)['hits']['hits']
+	try:
+		return es.search(index=index, body=body)['hits']['hits']
+	except NotFoundError: # No contacts have been created yet.
+		return []
 
 def create_contact(newname):
 	try:
 		contact = get_contact(newname)
 	# Want exception to be raised here, means name does not yet exist.
-	except InvalidNameException: 
+	except (NotFoundError, InvalidNameException): 
 		body = {
 					'name': newname
 				}
-		return es.create(index=index, doc_type="contact", body=body)
+		return es.index(index=index, doc_type="contact", body=body)
 	raise InvalidNameException()
 
 def get_contact(name):

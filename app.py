@@ -23,7 +23,7 @@ def contact():
 	elif request.method == "POST":
 		try:
 			return json.dumps(create_contact(request.values['name']))
-		except KeyError, InvalidNameException:
+		except (KeyError, InvalidNameException):
 			return ('Bad Request', 400)
 
 
