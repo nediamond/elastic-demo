@@ -80,10 +80,10 @@ def delete_contact(name):
 		raise ContactDeletionError
 
 class InvalidNameException(Exception):
-    pass
+	pass
 class ContactCreationError(Exception):
-    pass
+	pass
 class ContactUpdateError(Exception):
-    pass
+	pass
 class ContactDeletionError(Exception):
-    pass
+	pass

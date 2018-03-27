@@ -44,8 +44,8 @@ def contact_name(name):
 		elif request.method == "PUT":
 			try:
 				newcontact = ContactModel(request.values.get('name', name), 
-									   	  request.values.get('phone'), 
-									   	  request.values.get('email'))
+										  request.values.get('phone'), 
+										  request.values.get('email'))
 				return json.dumps(put_contact(name, newcontact))	
 			except ValueError:
 				return ('Bad Request', 400)
