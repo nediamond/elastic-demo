@@ -14,7 +14,8 @@ class ContactModel:
 				self.attrs['phone'] = phone
  
 		if email:
-			if len(email) < 6 or len(email) > 35: # Would write regex with more time
+			# Would write (or find) regex with more time
+			if len(email) < 6 or len(email) > 35: 
 				raise ValueError("Invalid Email")
 			else:
 				self.attrs['email'] = email
