@@ -1,12 +1,15 @@
 from elasticsearch import Elasticsearch, NotFoundError
+import configparser
 
-#Todo: config
+config = configparser.ConfigParser()
+config.read('config.ini')
+
 es = Elasticsearch(
-	['localhost'],
-	scheme="http",
-	port=9200
+	[config['ElasticSearch']['Host']],
+	scheme='http',
+	port=int(config['ElasticSearch']['Port'])
 )
-index = "contacts"
+index = config['ElasticSearch']['Index']
 
 def get_contact_page(pageSize, page, query):
 	body = {
