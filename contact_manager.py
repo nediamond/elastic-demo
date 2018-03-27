@@ -52,7 +52,8 @@ def put_contact(name, newcontact):
 	for key in contact['_source']:
 		if key not in newcontact.attrs:
 			newcontact.attrs[key] = contact['_source'][key]
-	return es.index(index=index, doc_type="contact", id=contact['_id'], body=newcontact.attrs)
+	return es.index(index=index, doc_type="contact", 
+					id=contact['_id'], body=newcontact.attrs)
 
 def delete_contact(name):
 	contact = get_contact(name)
