@@ -55,9 +55,26 @@ class TestContactModel(unittest.TestCase):
 		with self.assertRaises(ValueError):
 			mod = ContactModel('a', email='abcdefghijklmopqrstuvwzyz@abcdefghijklmopqrstuvwzyz.abcdefghijklmopqrstuvwzyz')
 
+		with self.assertRaises(ValueError):
+			mod = ContactModel('a', email='rand@user@gmail.com')
+
+		with self.assertRaises(ValueError):
+			mod = ContactModel('a', email='rand.user.gmail.com')
+
+		with self.assertRaises(ValueError):
+			mod = ContactModel('a', email='rand.user@|||||.com')
+
+		with self.assertRaises(ValueError):
+			mod = ContactModel('a', email='rand.user@gmail.%%%')
+
 		mod = ContactModel('a', email='rand.user@gmail.com')
 		self.assertEqual(mod.attrs['email'], 'rand.user@gmail.com')
 
+		mod = ContactModel('a', email='rand.123@gmail.com')
+		self.assertEqual(mod.attrs['email'], 'rand.123@gmail.com')
+
+		mod = ContactModel('a', email='rand.user@gmail.us.co')
+		self.assertEqual(mod.attrs['email'], 'rand.user@gmail.us.co')
 
 class TestContactManager(unittest.TestCase):	
 	def test_get_contact_page(self):

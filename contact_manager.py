@@ -44,7 +44,7 @@ def create_contact(contact):
     raise InvalidNameException
 
 def _get_contact(name):
-    time.sleep(1) # Deals with latency/race condition type issues.
+    time.sleep(1) # Deals with latency/race condition to keep names unique.
     body = {
                 'size': 1,
                 'query': {
