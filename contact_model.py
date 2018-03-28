@@ -3,8 +3,12 @@ import re
 class ContactModel:
     def __init__(self, name, phone=None, email=None):
         self.attrs = {}
+
+        if not name or len(name) < 1 or len(name) > 40: 
+                raise ValueError("Invalid Name")
         self.attrs['name'] = name
         self.name = name
+
         if phone:
             for c in '()-. +':
                 phone = phone.replace(c, '')
@@ -15,7 +19,7 @@ class ContactModel:
  
         if email:
             # Would write (or find) regex with more time
-            if len(email) < 6 or len(email) > 35: 
+            if len(email) < 6 or len(email) > 40: 
                 raise ValueError("Invalid Email")
             else:
                 self.attrs['email'] = email

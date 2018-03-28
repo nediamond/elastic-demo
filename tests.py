@@ -16,6 +16,12 @@ class TestContactModel(unittest.TestCase):
 
 	def test_phone_validation(self):
 		with self.assertRaises(ValueError):
+			mod = ContactModel('')
+
+		with self.assertRaises(ValueError):
+			mod = ContactModel('12345678901234567890123456789012345678901234567890')
+
+		with self.assertRaises(ValueError):
 			mod = ContactModel('a', phone='(123)-456-7890-1234')
 
 		with self.assertRaises(ValueError):

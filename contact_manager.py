@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch, NotFoundError
 import configparser
+import time
 
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -12,6 +13,8 @@ es = Elasticsearch(
 index = config['ElasticSearch']['Index']
 
 def get_contact_page(pageSize, page, query):
+    if pageSize < 0 or page < 0 or pageSize*page+pageSize > 10000:
+        return []
     body = {
                 'from': int(page)*int(pageSize), 
                 'size': pageSize,
@@ -41,6 +44,7 @@ def create_contact(contact):
     raise InvalidNameException
 
 def _get_contact(name):
+    time.sleep(1) # Deals with latency/race condition type issues.
     body = {
                 'size': 1,
                 'query': {
